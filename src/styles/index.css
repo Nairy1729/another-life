@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #f7f1e3;
+  --void: #050508;
+}
+
+html, body {
+  background: var(--void);
+  color: var(--ink);
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { font-family: "Inter", system-ui, sans-serif; }
+
+.serif { font-family: "Playfair Display", "Cormorant Garamond", serif; }
+
+/* film grain - cheap, GPU-composited, always on */
+/* film grain - cheap, GPU-composited, always on */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -100%;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  background-image: url("/noise.svg");
+  animation: grain 0.9s steps(4) infinite;
+}
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-2%, 3%); }
+  50%  { transform: translate(3%, -2%); }
+  75%  { transform: translate(-3%, -3%); }
+  100% { transform: translate(2%, 2%); }
+}
+
+/* cinematic typography */
+.story-text {
+  color: #f7f1e3;
+  text-shadow:
+    0 0 1px rgba(247, 241, 227, 0.9),
+    0 0 22px rgba(247, 241, 227, 0.4),
+    0 0 70px rgba(210, 170, 130, 0.18);
+  letter-spacing: 0.035em;
+}
+
+/* quiet darkness behind story text - driven by StoryLayer */
+.text-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 42% at 50% 42%,
+    rgba(5, 5, 8, 0.72),
+    rgba(5, 5, 8, 0.3) 55%,
+    transparent 80%
+  );
+  opacity: 0;
+}
+
+/* ambient depth gradient */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 90% 60% at 50% 42%,
+    rgba(90, 77, 143, 0.07),
+    rgba(122, 34, 48, 0.03) 45%,
+    transparent 75%
+  );
+}
+
+/* celestial music icons - colored glow identities */
+/* ember = play/pause, violet = prev/next, crimson = playlist */
+.music-icon { transition: filter 0.5s ease; }
+
+.glow-ember .music-icon {
+  filter: drop-shadow(0 0 6px rgba(255, 200, 150, 0.55));
+}
+.glow-ember:hover .music-icon {
+  filter: drop-shadow(0 0 10px rgba(255, 210, 160, 0.9)) drop-shadow(0 0 22px rgba(255, 180, 120, 0.35));
+}
+
+.glow-violet .music-icon {
+  filter: drop-shadow(0 0 5px rgba(139, 127, 212, 0.5));
+}
+.glow-violet:hover .music-icon {
+  filter: drop-shadow(0 0 10px rgba(160, 148, 235, 0.85));
+}
+
+.glow-crimson .music-icon {
+  filter: drop-shadow(0 0 5px rgba(192, 90, 104, 0.55));
+}
+.glow-crimson:hover .music-icon {
+  filter: drop-shadow(0 0 10px rgba(215, 110, 125, 0.85));
+}
+
+/* button vessels - small glowing rings floating in the universe */
+.vessel {
+  border: 1px solid currentColor;
+  background: none;
+  box-shadow: 0 0 8px -3px currentColor;
+  opacity: 0.6;
+  transition: opacity 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+.vessel:hover { opacity: 1; box-shadow: 0 0 14px -3px currentColor; transform: scale(1.05); }
+.vessel-main { opacity: 0.75; }
+
+/* the dock rests until approached — but never disappears */
+.dock-idle { opacity: 0.85; transition: opacity 0.6s ease; }
+.dock-idle:hover, .dock-idle:focus-within { opacity: 1; }
+
+/* luminous UI text - for small interface text that must survive the void */
+.ui-lit {
+  text-shadow:
+    0 0 1px currentColor,
+    0 0 14px rgba(247, 241, 227, 0.35);
+}
+.ui-lit-gold {
+  text-shadow:
+    0 0 1px currentColor,
+    0 0 16px rgba(255, 200, 140, 0.45);
+}
+.ui-lit-crimson {
+  text-shadow:
+    0 0 1px currentColor,
+    0 0 12px rgba(220, 110, 130, 0.45);
+}
+
+/* orbit rings around play/pause - turn while the song plays */
+.orbit-spinning { animation: orbitspin 16s linear infinite; }
+.orbit-spinning-reverse { animation: orbitspin 26s linear infinite reverse; }
+@keyframes orbitspin {
+  to { transform: rotate(360deg); }
+}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .grain::after { animation: none; }
+  .orbit-spinning,
+  .orbit-spinning-reverse { animation: none; }
+}
+
+/* the visitor becomes the third light — native cursor retires (fine pointers only) */
+@media (pointer: fine) {
+  .no-native-cursor,
+  .no-native-cursor * {
+    cursor: none !important;
+  }
+}
+
+.orbit-spinning-slow { animation: orbitspin 20s linear infinite; }
+
+::selection { background: rgba(140, 30, 40, 0.4); }
